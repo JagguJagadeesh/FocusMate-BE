@@ -34,7 +34,14 @@ const signup = async (req: Request,res: Response) => {
         })
         const token = generateToken(user.id)
 
-        return res.status(200).json({message:`User ${user.name} is Created Sucessfully`,token}) as any
+        return res.cookie('token', token, {
+            httpOnly: true,        // Prevents access from JavaScript
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        })
+        .status(200)
+        .json({
+            message: `User ${user.name} is Created Successfully`,user:{id:user.id,name:user.name,email:user.email}
+        }) as any
 
     } catch (e) {
         console.log('Error at Signup',e)
@@ -59,7 +66,10 @@ const sigin = async (req: Request,res: Response) => {
 
         const token = generateToken(checkUser.id)
 
-        return res.status(200).json({message:`User ${checkUser.name} is Logined Sucessfully`,token}) as any
+        return res.cookie("token",token,{
+            httpOnly:true,
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        }).status(200).json({message:`User ${checkUser.name} is Logined Sucessfully`,user:{id:checkUser.id,name:checkUser.name,email:checkUser.email}}) as any
 
     } catch (e) {
         console.log('Error at Signup',e)
