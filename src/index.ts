@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import authRoute from './routes/authRoute'
 import notesRouter from './routes/notesRoute'
+import videoRouter from './routes/videoRoute'
 import cors from 'cors'
 
 dotenv.config()
@@ -20,6 +21,7 @@ app.use(cors({
 
 app.use('/api',authRoute)
 app.use('/api',notesRouter)
+app.use('/api',videoRouter)
 
 
 app.get('/',(req,res)=>{

@@ -61,5 +61,30 @@ const getNote = async (req: Request, res: Response) => {
   }
 };
 
+// src/controllers/notesController.ts
+const deleteNote = async (req: Request, res: Response) => {
+  try {
+    const { noteId } = req.body;
 
-export { createNote , getNote , getAllNotes }
+    if (!noteId) {
+      return res.status(400).json({ message: 'Note ID is required.' });
+    }
+
+    const deletedNote = await prisma.note.delete({
+      where: {
+        id: noteId,
+      },
+    });
+
+    return res.status(200).json({ message: 'Note deleted successfully.', deletedNote }) as any
+  } catch (error) {
+    console.error('Error deleting note:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+
+
+
+
+export { createNote , getNote , getAllNotes , deleteNote }
