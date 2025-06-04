@@ -4,11 +4,12 @@ import authRoute from './routes/authRoute';
 import notesRouter from './routes/notesRoute';
 import videoRouter from './routes/videoRoute';
 import cors from 'cors';
-import serverless from 'serverless-http';
+
 
 dotenv.config();
 
 const app = express();
+const port = process.env.PORT || 8080
 
 // Middleware
 app.use(express.json());
@@ -26,5 +27,6 @@ app.get('/', (req, res) => {
   res.send('Hello from Vercel!');
 });
 
-// Export as handler for Vercel
-export default serverless(app);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
