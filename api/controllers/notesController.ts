@@ -28,11 +28,12 @@ const createNote = async (req: Request, res: Response) => {
 
 const getAllNotes = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.body;
-
-    const notes = await prisma.note.findMany({
-      where: { ownerID: userId },
-    });
+    const {ownerID} = req.body
+    const allVideos = await prisma.video.findMany({
+        where: {
+            ownerID,
+        }
+    })
 
     res.status(200).json({ notes });
   } catch (e) {
