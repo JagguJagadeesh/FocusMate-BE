@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 
@@ -26,21 +27,34 @@ const createNote = async (req: Request, res: Response) => {
 };
 
 
+
 const getAllNotes = async (req: Request, res: Response) => {
   try {
-    const {ownerID} = req.body
+    // 1. Read the token from cookies
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized: Token missing' });
+    }
+
+    // 2. Verify the token and extract user ID
+    const decoded = jwt.verify(token, process.env.JWT_KEY!) as { id: string };
+
+    // 3. Get notes only for that user
     const notes = await prisma.note.findMany({
-        where: {
-            ownerID,
-        }
-    })
+      where: {
+        ownerID: decoded.id,
+      },
+    });
 
     res.status(200).json({ notes });
+
   } catch (e) {
     console.error("Error at getting all notes", e);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 
 const getNote = async (req: Request, res: Response) => {
