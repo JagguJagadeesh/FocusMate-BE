@@ -29,7 +29,7 @@ const createNote = async (req: Request, res: Response) => {
 const getAllNotes = async (req: Request, res: Response) => {
   try {
     const {ownerID} = req.body
-    const allVideos = await prisma.note.findMany({
+    const notes = await prisma.note.findMany({
         where: {
             ownerID,
         }
