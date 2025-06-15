@@ -15,6 +15,7 @@ model User {
   password     String
   notes        Note[]
   videos       Video[]
+  tasks        Task[]
 }  
   
 model Note {  
@@ -32,4 +33,13 @@ model Video {
   link         String   
   ownerID      String   @db.ObjectId
   owner        User     @relation(fields: [ownerID],references: [id])
+}
+
+model Task {
+  id           String   @id @map("_id")
+  title        String   
+  start        String
+  category     String
+  userID       String   @db.ObjectId
+  user         User     @relation(fields: [userID],references: [id])
 }

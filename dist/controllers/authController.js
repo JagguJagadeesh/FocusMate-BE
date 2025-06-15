@@ -43,9 +43,11 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             }
         });
         const token = generateToken(user.id);
-        return res.cookie('token', token, {
-            httpOnly: true, // Prevents access from JavaScript
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        return res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         })
             .status(200)
             .json({
@@ -76,7 +78,9 @@ const sigin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const token = generateToken(checkUser.id);
         return res.cookie("token", token, {
             httpOnly: true,
-            maxAge: 7 * 24 * 60 * 60 * 1000
+            secure: true,
+            sameSite: 'none',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         }).status(200).json({ message: `User ${checkUser.name} is Logined Sucessfully`, user: { id: checkUser.id, name: checkUser.name, email: checkUser.email } });
     }
     catch (e) {
