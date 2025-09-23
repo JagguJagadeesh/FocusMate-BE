@@ -80,5 +80,15 @@ const sigin = async (req: Request,res: Response) => {
     }
 }
 
+const logout = async (req: Request,res: Response) => {
+    try {
 
-export { signup , sigin}
+        return res.clearCookie('token').status(200).json({message:`User Logged Successfuly`}) as any
+
+    } catch (e) {
+        console.log('Error at Signup',e)
+    }
+}
+
+
+export { signup , sigin , logout}
