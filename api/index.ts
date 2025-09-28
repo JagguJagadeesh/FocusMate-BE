@@ -13,7 +13,7 @@ const port = process.env.PORT || 8080;
 
 const allowedOrigins = [
   process.env.BASE_URL,         
-  'http://localhost:3000',    
+      
 ];
 
 // Middleware
@@ -21,13 +21,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: process.env.BASE_URL,
+    // origin: 'http://localhost:3000',
     credentials: true,
   })
 );
