@@ -58,7 +58,7 @@ const sigin = async (req: Request,res: Response) => {
         })
         if(!checkUser) return res.status(500).json({message:'User Not found'});
 
-        const verifypass = await bcrypt.compare(password,checkUser.password)
+        const verifypass = await bcrypt.compare(password.toString(),checkUser.password)
         if(!verifypass) return res.status(500).json({message:'password is incorret'});
 
         const token = generateToken(checkUser.id)
