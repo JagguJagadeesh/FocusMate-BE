@@ -6,6 +6,7 @@ import videoRouter from './routes/videoRoute';
 import taskRoute from './routes/taskRoute';
 import cors from 'cors';
 import { verifyToken } from './middlewares/verifyToken';
+import eventRouter from './routes/eventsRoutes'
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api', authRoute);
 app.use('/api',verifyToken, notesRouter);
 app.use('/api',verifyToken, videoRouter);
 app.use('/api',verifyToken, taskRoute);
+app.use('/api/events',verifyToken,eventRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello from Vercel!');
