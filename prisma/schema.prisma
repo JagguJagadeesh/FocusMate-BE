@@ -8,41 +8,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
 model User {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   email        String   @unique
   name         String?
   password     String
-  notes        Note[]
-  videos       Video[]
-  tasks        Task[]
-  tasksDone    Int      @default(0)  
+  notes        Note[]   @relation("UserNotes")   
+  videos       Video[]  @relation("UserVideos")  
+  tasks        Task[]   @relation("UserTasks")   
+  tasksDone    Int      @default(0)
 }
 
-  
 model Note {  
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String   @default("No Title")
   description  String   @default("Nothing about Note")
   imgData      String   
-  owner        User     @relation(fields: [ownerID],references: [id])
-  ownerID      String   @db.ObjectId
+  auther       User     @relation("UserNotes", fields: [autherID], references: [id])
+  autherID     String   @db.ObjectId
 }
 
 model Video {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String   @default("No Title")
   link         String   
+  owner        User     @relation("UserVideos", fields: [ownerID], references: [id])
   ownerID      String   @db.ObjectId
-  owner        User     @relation(fields: [ownerID],references: [id])
 }
 
 model Task {
-  id           String   @id @map("_id")
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String
   start        String
   category     String
   completed    Boolean  @default(false)
   userID       String   @db.ObjectId
-  user         User     @relation(fields: [userID], references: [id])
+  user         User     @relation("UserTasks", fields: [userID], references: [id])
 }

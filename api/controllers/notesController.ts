@@ -7,11 +7,11 @@ const prisma = new PrismaClient()
 
 const createNote = async (req: Request, res: Response) => {
   try {
-    const { ownerID, title, description, imgData } = req.body;
+    const { autherID, title, description, imgData } = req.body;
 
     const newNote = await prisma.note.create({
       data: {
-        ownerID,
+        autherID,
         title,
         description,
         imgData,
@@ -28,10 +28,10 @@ const createNote = async (req: Request, res: Response) => {
 
 const getAllNotes = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.body;
+    const { autherID } = req.body;
 
     const notes = await prisma.note.findMany({
-      where: { ownerID: userId },
+      where: { autherID: autherID },
     });
 
     res.status(200).json({ notes });
