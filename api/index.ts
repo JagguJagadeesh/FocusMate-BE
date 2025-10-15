@@ -25,7 +25,7 @@ app.use(
     origin: (origin,callback) => {
       if(!origin || allowedOrigins.includes(origin)) callback(null,true);
       else callback(new Error('CORS: Not alowed!'));
-  }),
+  })
 );
 
 // Routes
