@@ -18,6 +18,8 @@ model User {
   notes        Note[]   @relation("UserNotes")   
   videos       Video[]  @relation("UserVideos")  
   tasks        Task[]   @relation("UserTasks")   
+  orgEvents    Event[]  @relation("UserOrganizeEvent") 
+  parEvents    String[] @db.ObjectId
   tasksDone    Int      @default(0)
 }
 
@@ -46,4 +48,29 @@ model Task {
   completed    Boolean  @default(false)
   userID       String   @db.ObjectId
   user         User     @relation("UserTasks", fields: [userID], references: [id])
+}
+
+
+// Events
+enum EventType {
+  Virtual
+  InPerson
+}
+model Event {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  date         DateTime
+  location     String?
+  type         EventType @default(InPerson)
+  category     String
+  desc         String
+  price        Int
+  capacity     Int
+  registered   Int @default(0)
+  image        String
+  tags         String[] 
+  difficulty   String
+  organizer    User      @relation("UserOrganizeEvent",fields: [organizerID],references: [id])
+  organizerID  String    @db.ObjectId
+  parIDs       String[]  @db.ObjectId
 }

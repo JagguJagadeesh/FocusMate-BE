@@ -5,10 +5,9 @@ const prisma = new PrismaClient();
 
 const addTask = async (req: Request,res: Response) => {
     try {
-        const { userID , title , start , category , id} = req.body;
+        const { userID , title , start , category } = req.body;
         const createTask = await prisma.task.create({
             data: {
-                id,
                 title,
                 start,
                 category,
