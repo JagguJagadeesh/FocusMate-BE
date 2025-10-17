@@ -63,6 +63,7 @@ const deleteEvent = async (req: Request, res: Response) => {
   }
 };
 
+// for participants
 const addParticipant = async (req: Request, res: Response) => {
   try {
     const { id, participantId } = req.body;
@@ -98,4 +99,33 @@ const addParticipant = async (req: Request, res: Response) => {
   }
 };
 
-export { getAllEvents, createEvent, deleteEvent, addParticipant };
+const isParticipantRegistered = async (req: Request, res: Response) => {
+  try {
+    const { id, participantId } = req.body;
+
+    if (!participantId) {
+      res.status(400).json({ registered: false, message: "participantId missing" });
+    }
+
+    const event = await prisma.event.findFirst({
+      where: {
+        id,
+        parIDs: {
+          has: participantId,
+        },
+      },
+    });
+
+    if (!event) {
+      res.status(200).json({ registered: false });
+    }
+
+    res.status(200).json({ registered: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ registered: false, error: "Server error" });
+  }
+};
+
+
+export { getAllEvents, createEvent, deleteEvent, addParticipant ,isParticipantRegistered};
