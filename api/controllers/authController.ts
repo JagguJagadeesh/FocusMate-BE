@@ -8,21 +8,21 @@ const prisma = new PrismaClient()
 
 // Generating Token
 function generateToken(id: string){
-    return jwt.sign({id},process.env.JWT_KEY!,{expiresIn:"5h"})
+    return jwt.sign({id},process.env.JWT_KEY!,{expiresIn:"7d"})
 }
 
-// SignUp
-const signup = async (req: Request,res: Response) => {
+// SignUp Controller
+const signup = async (req: Request,res: Response): Promise<void> => {
     try {
         const {name , email , password} = req.body
-        if(!name || !email || !password) return res.status(401).json({message:'Missing Feilds'});
+        if(!name || !email || !password) res.status(400).json({message:'All fields are required. '});
 
         const checkUser = await prisma.user.findUnique({
             where:{
                 email
             }
         })
-        if(checkUser) return res.status(500).json({message:'User already Existed'});
+        if(checkUser) res.status(409).json({message:'User already exists. '});
 
         const hashpass = await bcrypt.hash(password,10)
         const user = await prisma.user.create({
@@ -30,55 +30,60 @@ const signup = async (req: Request,res: Response) => {
                 name,
                 email,
                 password: hashpass
+            },
+            select:{
+                id:true,name:true,email:true
             }
         })
         const token = generateToken(user.id)
 
-        return res
+        res
         .status(200)
         .json({
-            message: `User ${user.name} is Created Successfully`,token,user:{id:user.id,name:user.name,email:user.email}
-        }) as any
+            message: `Welcome aboard, ${user.name}!`,
+            token,
+            user
+        })
 
     } catch (e) {
-        console.log('Error at Signup',e)
+        console.error('{SIGNUP_ERROR}',e)
+        res.status(500).json({message: "Internal server error."})
     }
 }
 
 // Sigin
-const sigin = async (req: Request,res: Response) => {
+const sigin = async (req: Request,res: Response): Promise<void> => {
     try {
         const {email , password} = req.body
-        if(!email || !password) return res.status(401).json({message:'Missing Feilds'});
+        if(!email || !password) res.status(400).json({message:'Email and Password are missing.'});
 
         const checkUser = await prisma.user.findUnique({
             where:{
                 email
             }
         })
-        if(!checkUser) return res.status(500).json({message:'User Not found'});
+        if(!checkUser) {
+            res.status(404).json({message:'User Not found.'});
+            return
+        }
 
         const verifypass = await bcrypt.compare(password.toString(),checkUser.password)
-        if(!verifypass) return res.status(500).json({message:'password is incorret'});
+        if(!verifypass) {
+            res.status(401).json({message:'Incorrect password.'});
+            return
+        }
 
         const token = generateToken(checkUser.id)
-        return res.status(200).json({message:`User ${checkUser.name} is Logined Sucessfully`,token,user:{id:checkUser.id,name:checkUser.name,email:checkUser.email}}) as any
+        res.status(200).json({message:`Welcome back, ${checkUser.name}!`,
+            token,
+            user:checkUser});
 
     } catch (e) {
-        console.log('Error at Signup',e)
-    }
-}
-
-const logout = async (req: Request,res: Response) => {
-    try {
-
-        res.clearCookie('token')
-        return res.status(200).json({message:`User Logged Successfuly`}) as any
-
-    } catch (e) {
-        console.log('Error at Signup',e)
+        console.log('{SIGNIN_ERROR}',e)
+        res.status(500).json({message:"Internal server error."})
     }
 }
 
 
-export { signup , sigin , logout}
+
+export { signup , sigin }
