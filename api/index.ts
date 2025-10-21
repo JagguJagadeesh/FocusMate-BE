@@ -13,15 +13,22 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8080;
 
+const allowedOrigins = [
+  process.env.BASE_URL,
+  'https://localhost:3000'      
+];
 
 // Middleware
 app.use(express.json());
 
 app.use(
   cors({
-    origin: ["https://localhost:3000","http://localhost:3000"],
+    origin: (origin,callback) => {
+      if(!origin || allowedOrigins.includes(origin)) callback(null,true);
+      else callback(new Error('CORS: Not alowed!'))
+    },
     credentials: true,
-  }),
+  })
 );
 
 // Routes
