@@ -105,6 +105,7 @@ const isParticipantRegistered = async (req: Request, res: Response) => {
 
     if (!participantId) {
       res.status(400).json({ registered: false, message: "participantId missing" });
+      return
     }
 
     const event = await prisma.event.findFirst({
@@ -118,6 +119,7 @@ const isParticipantRegistered = async (req: Request, res: Response) => {
 
     if (!event) {
       res.status(200).json({ registered: false });
+      return
     }
 
     res.status(200).json({ registered: true });

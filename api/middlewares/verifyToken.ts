@@ -1,22 +1,21 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
-import jwt from 'jsonwebtoken'
+import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
 
 const key = process.env.JWT_KEY as string;
 
-// interface AuthRequest extends Request {
-//     user: any;
-// }
-
-export function verifyToken(req: Request,res: Response,next: NextFunction) {
+export function verifyToken(req: Request, res: Response, next: NextFunction) {
+  try {
     const header = req.headers["authorization"];
     const token = header && header.split(" ")[1];
 
-    if(!token){
-        res.json({message: 'Token not found'})
-        return;
+    if (!token) {
+      res.status(401).json({ message: "Access denied, No Token provided." });
+      return;
     }
-    const decoded = jwt.verify(token,key)
-
-    // req.user = decoded;
-    next()
+    const decoded = jwt.verify(token, key);
+    next();
+  } catch (e: any) {
+    console.log("[VERIFY_TOKEN_ERROR]", e);
+    
+  }
 }
