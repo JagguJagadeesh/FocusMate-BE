@@ -14,6 +14,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8080;
 
+
 const allowedOrigins = [
   process.env.BASE_URL,
   'http://localhost:3000'      
