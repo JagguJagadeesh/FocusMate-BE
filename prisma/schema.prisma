@@ -9,7 +9,7 @@ datasource db {
 }
 
 
-
+// User 
 model User {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   email        String   @unique
@@ -20,9 +20,11 @@ model User {
   tasks        Task[]   @relation("UserTasks")   
   orgEvents    Event[]  @relation("UserOrganizeEvent") 
   parEvents    String[] @db.ObjectId
+  books        String[] 
   tasksDone    Int      @default(0)
 }
 
+// Note
 model Note {  
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String   @default("No Title")
@@ -32,6 +34,7 @@ model Note {
   autherID     String   @db.ObjectId
 }
 
+// Video
 model Video {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String   @default("No Title")
@@ -40,6 +43,7 @@ model Video {
   ownerID      String   @db.ObjectId
 }
 
+// Task
 model Task {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String
@@ -49,7 +53,6 @@ model Task {
   userID       String   @db.ObjectId
   user         User     @relation("UserTasks", fields: [userID], references: [id])
 }
-
 
 // Events
 enum EventType {

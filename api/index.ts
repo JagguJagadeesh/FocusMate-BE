@@ -7,15 +7,17 @@ import taskRoute from './routes/taskRoute';
 import cors from 'cors';
 import { verifyToken } from './middlewares/verifyToken';
 import eventRouter from './routes/eventsRoutes'
+import bookRoute from './routes/bookRoute'
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 8080;
 
+
 const allowedOrigins = [
   process.env.BASE_URL,
-  'https://localhost:3000'      
+  'http://localhost:3000'      
 ];
 
 // Middleware
@@ -37,6 +39,7 @@ app.use('/api',verifyToken, notesRouter);
 app.use('/api',verifyToken, videoRouter);
 app.use('/api',verifyToken, taskRoute);
 app.use('/api/events',verifyToken,eventRouter)
+app.use('/api',verifyToken,bookRoute)
 
 app.get('/', (req, res) => {
   res.send('Hello from Vercel!');
