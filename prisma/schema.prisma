@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,72 +7,83 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 // User 
 model User {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  email        String   @unique
-  name         String?
-  password     String
-  notes        Note[]   @relation("UserNotes")   
-  videos       Video[]  @relation("UserVideos")  
-  tasks        Task[]   @relation("UserTasks")   
-  orgEvents    Event[]  @relation("UserOrganizeEvent") 
-  parEvents    String[] @db.ObjectId
-  books        String[] 
-  tasksDone    Int      @default(0)
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  name      String?
+  password  String
+  notes     Note[]   @relation("UserNotes")
+  videos    Video[]  @relation("UserVideos")
+  tasks     Task[]   @relation("UserTasks")
+  orgEvents Event[]  @relation("UserOrganizeEvent")
+  files     File[]   @relation("UserFiles")
+  parEvents String[] @db.ObjectId
+  books     String[]
+  tasksDone Int      @default(0)
 }
 
-// Note
-model Note {  
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  title        String   @default("No Title")
-  description  String   @default("Nothing about Note")
-  imgData      String   
-  auther       User     @relation("UserNotes", fields: [autherID], references: [id])
-  autherID     String   @db.ObjectId
+// File Model
+model File {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  handlerId String @db.ObjectId
+  handler   User   @relation("UserFiles", fields: [handlerId], references: [id])
+  name      String @default(ulid())
+  url       String
+  publicId   String
 }
 
-// Video
+// Note Model
+model Note {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  title       String @default("No Title")
+  description String @default("Nothing about Note")
+  imgData     String
+  auther      User   @relation("UserNotes", fields: [autherID], references: [id])
+  autherID    String @db.ObjectId
+}
+
+// Video Model
 model Video {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  title        String   @default("No Title")
-  link         String   
-  owner        User     @relation("UserVideos", fields: [ownerID], references: [id])
-  ownerID      String   @db.ObjectId
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  title   String @default("No Title")
+  link    String
+  owner   User   @relation("UserVideos", fields: [ownerID], references: [id])
+  ownerID String @db.ObjectId
 }
 
-// Task
+// Task Model
 model Task {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  start        String
-  category     String
-  completed    Boolean  @default(false)
-  userID       String   @db.ObjectId
-  user         User     @relation("UserTasks", fields: [userID], references: [id])
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  start     String
+  category  String
+  completed Boolean @default(false)
+  userID    String  @db.ObjectId
+  user      User    @relation("UserTasks", fields: [userID], references: [id])
 }
 
-// Events
+// Event Model
 enum EventType {
   Virtual
   InPerson
 }
+
 model Event {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  date         DateTime
-  location     String?
-  type         EventType @default(InPerson)
-  category     String
-  desc         String
-  price        Int
-  capacity     Int
-  registered   Int @default(0)
-  image        String
-  tags         String[] 
-  difficulty   String
-  organizer    User      @relation("UserOrganizeEvent",fields: [organizerID],references: [id])
-  organizerID  String    @db.ObjectId
-  parIDs       String[]  @db.ObjectId
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  date        DateTime
+  location    String?
+  type        EventType @default(InPerson)
+  category    String
+  desc        String
+  price       Int
+  capacity    Int
+  registered  Int       @default(0)
+  image       String
+  tags        String[]
+  difficulty  String
+  organizer   User      @relation("UserOrganizeEvent", fields: [organizerID], references: [id])
+  organizerID String    @db.ObjectId
+  parIDs      String[]  @db.ObjectId
 }
