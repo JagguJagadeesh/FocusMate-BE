@@ -28,9 +28,9 @@ model File {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   handlerId String @db.ObjectId
   handler   User   @relation("UserFiles", fields: [handlerId], references: [id])
-  name      String
+  name      String @default(ulid())
   url       String
-  publiId   String
+  publicId   String
 }
 
 // Note Model

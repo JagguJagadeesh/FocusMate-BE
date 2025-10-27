@@ -1,48 +1,46 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import authRoute from './routes/authRoute';
-import notesRouter from './routes/notesRoute';
-import videoRouter from './routes/videoRoute';
-import taskRoute from './routes/taskRoute';
-import cors from 'cors';
-import { verifyToken } from './middlewares/verifyToken';
-import eventRouter from './routes/eventsRoutes'
-import bookRoute from './routes/bookRoute'
+import express from "express";
+import dotenv from "dotenv";
+import authRoute from "./routes/authRoute";
+import notesRouter from "./routes/notesRoute";
+import videoRouter from "./routes/videoRoute";
+import taskRoute from "./routes/taskRoute";
+import cors from "cors";
+import { verifyToken } from "./middlewares/verifyToken";
+import eventRouter from "./routes/eventsRoutes";
+import bookRoute from "./routes/bookRoute";
+import fileRoute from "./routes/fileRoute";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 8080;
 
-
-const allowedOrigins = [
-  process.env.BASE_URL,
-  'http://localhost:3000'      
-];
+const allowedOrigins = [process.env.BASE_URL, "http://localhost:3000"];
 
 // Middleware
 app.use(express.json());
 
 app.use(
   cors({
-    origin: (origin,callback) => {
-      if(!origin || allowedOrigins.includes(origin)) callback(null,true);
-      else callback(new Error('CORS: Not alowed!'))
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) callback(null, true);
+      else callback(new Error("CORS: Not alowed!"));
     },
     credentials: true,
   })
 );
 
 // Routes
-app.use('/api', authRoute);
-app.use('/api',verifyToken, notesRouter);
-app.use('/api',verifyToken, videoRouter);
-app.use('/api',verifyToken, taskRoute);
-app.use('/api/events',verifyToken,eventRouter)
-app.use('/api',verifyToken,bookRoute)
+app.use("/api", authRoute);
+app.use("/api", verifyToken, notesRouter);
+app.use("/api", verifyToken, videoRouter);
+app.use("/api", verifyToken, taskRoute);
+app.use("/api/events", verifyToken, eventRouter);
+app.use("/api", verifyToken, bookRoute);
+app.use("/api", verifyToken, fileRoute);
 
-app.get('/', (req, res) => {
-  res.send('Hello from Vercel!');
+app.get("/", (req, res) => {
+  res.send("Hello from Vercel!");
 });
 
 app.listen(port, () => {
