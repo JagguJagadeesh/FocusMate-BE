@@ -30,7 +30,7 @@ model File {
   handler   User   @relation("UserFiles", fields: [handlerId], references: [id])
   name      String @default(ulid())
   url       String
-  publicId   String
+  publicId  String
 }
 
 // Note Model

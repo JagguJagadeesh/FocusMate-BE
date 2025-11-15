@@ -6,6 +6,11 @@ const key = process.env.JWT_KEY as string;
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
   try {
     const header = req.headers["authorization"];
+
+    if (!header) {
+      res.status(401).json({ message: "Authorization header not found" });
+      return;
+    }
     const token = header && header.split(" ")[1];
 
     if (!token) {
@@ -15,7 +20,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     const decoded = jwt.verify(token, key);
     next();
   } catch (e: any) {
-    console.log("[VERIFY_TOKEN_ERROR]", e);
-    
+    console.log("[VERIFY_TOKEN_ERROR]");
+    res.status(404).json({ message: "Tocken verifation error" });
   }
 }
