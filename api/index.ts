@@ -9,6 +9,7 @@ import { verifyToken } from "./middlewares/verifyToken";
 import eventRouter from "./routes/eventsRoutes";
 import bookRoute from "./routes/bookRoute";
 import fileRoute from "./routes/fileRoute";
+import { checkEventsDeletions } from "./middlewares/eventsMiddleware";
 
 dotenv.config();
 
@@ -35,7 +36,7 @@ app.use("/api", authRoute);
 app.use("/api", verifyToken, notesRouter);
 app.use("/api", verifyToken, videoRouter);
 app.use("/api", verifyToken, taskRoute);
-app.use("/api/events", verifyToken, eventRouter);
+app.use("/api/events", verifyToken, checkEventsDeletions, eventRouter);
 app.use("/api", verifyToken, bookRoute);
 app.use("/api", verifyToken, fileRoute);
 

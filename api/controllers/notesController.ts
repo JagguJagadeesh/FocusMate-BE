@@ -1,9 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 
-
-const prisma = new PrismaClient()
-
+const prisma = new PrismaClient();
 
 const createNote = async (req: Request, res: Response) => {
   try {
@@ -18,13 +16,14 @@ const createNote = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(201).json({ message: "Note created successfully", note: newNote });
+    res
+      .status(201)
+      .json({ message: "Note created successfully", note: newNote });
   } catch (e) {
     console.error("Error at creating notes", e);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 const getAllNotes = async (req: Request, res: Response) => {
   try {
@@ -41,7 +40,6 @@ const getAllNotes = async (req: Request, res: Response) => {
   }
 };
 
-
 const getNote = async (req: Request, res: Response) => {
   try {
     const { noteId } = req.body;
@@ -54,7 +52,7 @@ const getNote = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Note not found" });
     }
 
-    return res.status(200).json({ note }) as any
+    return res.status(200).json({ note }) as any;
   } catch (e) {
     console.error("Error getting a note", e);
     res.status(500).json({ message: "Internal Server Error" });
@@ -67,7 +65,7 @@ const deleteNote = async (req: Request, res: Response) => {
     const { noteId } = req.body;
 
     if (!noteId) {
-      return res.status(400).json({ message: 'Note ID is required.' });
+      return res.status(400).json({ message: "Note ID is required." });
     }
 
     const deletedNote = await prisma.note.delete({
@@ -76,15 +74,13 @@ const deleteNote = async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(200).json({ message: 'Note deleted successfully.', deletedNote }) as any
+    return res
+      .status(200)
+      .json({ message: "Note deleted successfully.", deletedNote }) as any;
   } catch (error) {
-    console.error('Error deleting note:', error);
-    res.status(500).json({ message: 'Internal server error.' });
+    console.error("Error deleting note:", error);
+    res.status(500).json({ message: "Internal server error." });
   }
 };
 
-
-
-
-
-export { createNote , getNote , getAllNotes , deleteNote }
+export { createNote, getNote, getAllNotes, deleteNote };
