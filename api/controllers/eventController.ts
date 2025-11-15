@@ -17,7 +17,7 @@ const createEvent = async (req: Request, res: Response) => {
   try {
     const body = req.body;
     if (!body) res.status(400).json({ message: "Invalid Entry" });
-    const createdEvent = await prisma.event.create({
+    await prisma.event.create({
       data: {
         title: body.title,
         date: new Date(body.date),
@@ -104,8 +104,10 @@ const isParticipantRegistered = async (req: Request, res: Response) => {
     const { id, participantId } = req.body;
 
     if (!participantId) {
-      res.status(400).json({ registered: false, message: "participantId missing" });
-      return
+      res
+        .status(400)
+        .json({ registered: false, message: "participantId missing" });
+      return;
     }
 
     const event = await prisma.event.findFirst({
@@ -119,7 +121,7 @@ const isParticipantRegistered = async (req: Request, res: Response) => {
 
     if (!event) {
       res.status(200).json({ registered: false });
-      return
+      return;
     }
 
     res.status(200).json({ registered: true });
@@ -129,5 +131,10 @@ const isParticipantRegistered = async (req: Request, res: Response) => {
   }
 };
 
-
-export { getAllEvents, createEvent, deleteEvent, addParticipant ,isParticipantRegistered};
+export {
+  getAllEvents,
+  createEvent,
+  deleteEvent,
+  addParticipant,
+  isParticipantRegistered,
+};
